@@ -1,0 +1,128 @@
+#banner {
+    position: reltative;
+    width:100%;
+    min-width:875px;
+    max-width:1400px;
+    height: 80px;
+    background-color:#000;
+    margin:0px auto;
+    clear:both;
+    display:none;
+}
+
+#logo {
+    float: left;
+    color:#fff;
+    font-size:64px;
+    height:48px;
+    padding:16px;
+    line-height:44px;
+}
+
+#profile {
+    float: right;
+    height:80px;
+    border-left:1px solid #888;
+    cursor:pointer;
+}
+
+#profile:hover, #profile.show {
+    background-color:#222;
+}
+
+#profile-name {
+    float:left;
+    height:24px;
+    line-height:22px;
+    padding:28px;
+    color:#aaa;
+    font-size:24px;
+}
+
+#profile:hover #profile-name, #profile.show  #profile-name {
+    color:#fff;
+}
+
+#profile-avatar {
+    position:relative;
+    display:inline-block;
+    height:60px;
+    width:60px;
+    padding:10px 0px;
+}
+
+#profile-arrow {
+    position:relative;
+    display:inline-block;
+    height:32px;
+    width:32px;
+    padding:24px 10px;
+}
+
+#profile-dropdown {
+    position:relative;
+    overflow:hidden;
+    height:0px;
+    z-index:2;
+    width: 100%;
+    margin-top:-8px;
+}
+
+#profile-dropdown.show {
+}
+
+.profile-dropdown-link {
+    background-color:#222;
+    color:#ccc;
+    border-top:#aaa 1px solid;
+    font-size:24px;
+    text-align:right;
+    padding:8px;
+}
+
+.profile-dropdown-link:hover {
+    background-color:#444;
+    color:#fff;
+}
+
+#notifications-label {
+    float:right;
+    height:80px;
+    line-height:80px;
+    font-size:16px;
+    color:#aaa;
+}
+
+#notifications {
+    float: right;
+    height:40px;
+    width:40px;
+    padding:0px;
+    margin:20px;
+    margin-right:40px;
+    cursor:pointer;
+    background-color:#444;
+    color:#aaa;
+    font-size:24px;
+    line-height:40px;
+    text-align:center;
+}
+
+#notifications:hover{
+    background-color:#aaa;
+    color:#444;
+}
+
+#notifications.new {
+    background-color:#0080ff;
+    color:#fff;
+}
+
+#notifications.new:hover{
+    background-color:#fff;
+    color:#0080ff;
+}
+
+#notifications-dropdown {
+    display:none;
+}

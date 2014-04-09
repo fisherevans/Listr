@@ -1,0 +1,45 @@
+.autocomplete-suggestions {
+    border: 1px solid #999;
+    background: #FFF;
+    overflow: auto;
+    z-index:999;
+}
+
+.autocomplete-suggestion {
+    padding: 2px 5px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.autocomplete-selected {
+    background: #F0F0F0;
+}
+
+.autocomplete-suggestions strong {
+    font-weight: normal;
+    color: #0080ff;
+}
+
+.autocomplete-suggestion .delete {
+    color:#aaa;
+    display:inline-block;
+    font-size:16px;
+    float: right;
+    height:32px;
+    padding:0px 5px;
+    line-height:32px;
+    margin-right:5px;
+    cursor:pointer;
+}
+
+.autocomplete-suggestion .delete:hover {
+    color:#f00;
+}
+
+.autocomplete-suggestions * {
+    -webkit-transition: color 0.25s ease, background 0.25s ease;
+       -moz-transition: color 0.25s ease, background 0.25s ease;
+           -ms-transition: color 0.25s ease, background 0.25s ease;
+            -o-transition: color 0.25s ease, background 0.25s ease;
+            transition: color 0.25s ease, background 0.25s ease;
+}

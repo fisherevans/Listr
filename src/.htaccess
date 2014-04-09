@@ -1,0 +1,20 @@
+<IfModule pagespeed_module>
+ModPagespeed off
+ModPagespeedEnableFilters rewrite_css,remove_comments,collapse_whitespace,rewrite_javascript,insert_dns_prefetch
+ModPagespeedDisableFilters elide_attributes,canonicalize_javascript_libraries
+</IfModule>
+
+AddType application/x-httpd-php55 .php
+RewriteEngine On
+
+# Some hosts may require you to use the `RewriteBase` directive.
+# If you need to use the `RewriteBase` directive, it should be the
+# absolute physical path to the directory that contains this htaccess file.
+#
+# RewriteBase /
+
+RewriteEngine On
+RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php/$1 [L]

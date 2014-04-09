@@ -1,0 +1,151 @@
+#list-description {
+    word-wrap: normal;
+    white-space: normal;
+    font-size:16px;
+    text-align:center;
+    padding: 10px 30px;
+    padding-bottom:0px;
+}
+
+#list-description  .text {
+    font-size:16px;
+    color:#888;
+    display:inline;
+}
+
+#list-description  .icon-pencil {
+    font-size:16px;
+    display:inline;
+    margin-left:5px;
+    color:#bbb;
+    cursor:pointer;
+}
+
+#list-description  .icon-pencil:hover {
+    color:#444;
+}
+
+.list-item {
+    padding:0px 16px;
+    padding-right:10px;
+    white-space: nowrap;
+    cursor: pointer;
+    height:0px;
+    overflow:hidden;
+    line-height:46px;
+    position:relative;
+    -webkit-transition: color 0.25s ease, background 0.25s ease, height 0.25s ease, margin 0.25s ease;
+       -moz-transition: color 0.25s ease, background 0.25s ease, height 0.25s ease, margin 0.25s ease;
+           -ms-transition: color 0.25s ease, background 0.25s ease, height 0.25s ease, margin 0.25s ease;
+            -o-transition: color 0.25s ease, background 0.25s ease, height 0.25s ease, margin 0.25s ease;
+            transition: color 0.25s ease, background 0.25s ease, height 0.25s ease, margin 0.25s ease;
+}
+
+.list-item.show {
+    height:46px;
+}
+
+.list-item:hover {
+    background-color: #f0f0f0;
+}
+
+.list-item * {
+    display: inline-block;
+    font-size:32px;
+    line-height:46px;
+    padding:0px 4px;
+    margin:0px 8px;
+    -webkit-transition: color 0.25s ease, background 0.25s ease, margin 0.25s ease;
+       -moz-transition: color 0.25s ease, background 0.25s ease, margin 0.25s ease;
+           -ms-transition: color 0.25s ease, background 0.25s ease, margin 0.25s ease;
+            -o-transition: color 0.25s ease, background 0.25s ease, margin 0.25s ease;
+            transition: color 0.25s ease, background 0.25s ease, margin 0.25s ease; 
+}
+
+.list-item-name {
+    color:#000;
+    font-size:24px;
+}
+
+#list-checked-panel .list-item-name {
+    text-decoration:line-through;
+    color:#666;
+}
+
+#list-checked-panel .icon-check:before {
+	content: "\e60a";
+}
+
+.list-item-check {
+    color:#0080ff;
+    font-size:24px;
+}
+
+.list-item:hover .list-item-check{
+    color:#444;
+}
+
+.list-item-x { 
+    position:absolute;
+    right:4px;
+    top:0px;
+    font-size:16px;
+    line-height:38px;
+    color:#aaa;
+    margin:4px;
+    height:38px;
+    width:38px;
+    text-align:center;
+    padding:0px;
+}
+
+.list-item:hover .list-item-x {
+    color:#888;
+}
+
+.list-item:hover .list-item-x:hover {
+    color:#f00;
+}
+
+#add-item {
+    padding:16px 0px;
+    white-space: nowrap;
+    width:100%;
+}
+
+#add-item-resize {
+    overflow:hidden;
+    padding-right:45px;
+}
+
+#add-item-input {
+    border:3px solid #ccc;
+    font-size:24px;
+    padding:4px;
+    margin:0px 8px 0px 20px;
+    width: 100%;
+    display:block;
+}
+
+#add-item-input:focus, #add-item-input:hover {
+    border:3px solid #0080FF;
+}
+
+#add-item-button {
+    font-size:24px;
+    margin:0px;
+    margin-right:24px;
+    background-color:#ccc;
+    color:#000;
+    cursor:pointer;
+    line-height:44px;
+    height:44px;
+    width:44px;
+    text-align:center;
+    float:right;
+}
+
+#add-item-button:hover {
+    background-color:#0080FF;
+    color:#fff;
+}

@@ -1,0 +1,106 @@
+#back {
+    background-color:#fff;
+    position:absolute;
+    top:0px;
+    left:0px;
+    bottom:0px;
+    right:0px;
+    z-index:-1;
+}
+
+#back.dark {
+    background-color:#000;
+}
+
+.login-box {
+    width: 100%;
+    min-width:300px;
+    max-width:425px;
+    margin:20px auto;
+    padding:20px 0px;
+    color:#fff;
+    display: none;
+    background-color:#000;
+}
+
+.login-box h1 {
+    text-align: center;
+    font-size: 64px;
+    padding-bottom: 10px;
+    font-weight:400;
+}
+
+.login-box .input-row {
+    width:80%;
+    margin:5px auto;
+}
+
+.login-box .input-row .input-label {
+    display: block;
+    width:100%;
+    text-align: center;
+    font-size: 24px;
+    padding: 10px 0px;
+}
+
+.login-box .input-row .input-text {
+    display: block;
+    width:94%;
+    padding:5px 3%;
+    font-size:28px;
+    border:3px solid #888;
+}
+
+.login-box .input-row .input-text:focus {
+    border-color:#FF7F00;
+}
+
+.login-box .input-row .input-text.password {
+    letter-spacing:4px;
+}
+
+.login-box .input-row .input-button {
+    display: block;
+    margin: 0px auto;
+    margin-top:30px;
+    margin-bottom:15px;
+    width:66%;
+    padding:5px 0px;
+    font-size:24px;
+    line-height:40px;
+    color: #fff;
+    cursor: pointer;
+    background-color:#0080FF;
+}
+
+.login-box .input-row .input-button:hover,
+        .login-box .input-row .input-button:focus {
+    background-color:#40A0FF;
+}
+
+.login-box .input-row .input-button.loading{
+    background-color:#FF7F00;
+    border-color:#000;
+}
+
+.login-box .link {
+    display: block;
+    margin: 0px auto;
+    text-align: center;
+    padding: 10px 0px;
+}
+
+.login-box p {
+    display: block;
+    width:80%;
+    margin: 0px auto;
+    text-align: center;
+}
+
+.login-box .error {
+    display: none;
+    text-align:center;
+    font-size:18px;
+    padding:5px 10%;
+    color:#FF0000;
+}

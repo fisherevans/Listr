@@ -1,0 +1,26 @@
+#api-wrapper {
+    width: 80%;
+    max-width: 700px;
+    min-width: 400px;
+    margin: 30px auto;
+    border: 3px dashed #aaa;
+    border-radius:15px;
+    padding:20px 3%;
+}
+
+#api-wrapper h1 {
+    text-align: center;
+}
+
+.api-command {
+    padding:15px 3px;
+    width: 94%;
+}
+
+.api-command p {
+    padding-left:2%;
+}
+
+.api-args {
+    color:#aaa;
+}

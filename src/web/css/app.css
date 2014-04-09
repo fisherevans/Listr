@@ -1,0 +1,48 @@
+html {
+    overflow: -moz-scrollbars-vertical; 
+    overflow-y: scroll;
+}
+
+body {
+    white-space: nowrap;
+    font-size: 24px;
+}
+
+#need-js {
+    width:50%;
+    margin:50px auto;
+    font-size:20px;
+    text-align:center;
+    color:#888;
+    -webkit-animation: fadein 5s; /* Safari and Chrome */
+       -moz-animation: fadein 5s; /* Firefox */
+        -ms-animation: fadein 5s; /* Internet Explorer */
+         -o-animation: fadein 5s; /* Opera */
+            animation: fadein 5s;
+}
+
+#loading {
+    position:absolute;
+    top:50%;
+    left:50%;
+    margin-left:-100px;
+    margin-top:-30px;
+    height:60px;
+    width:200px;
+    background-color:#000;
+    color:#fff;
+    text-align:center;
+    line-height:60px;
+    font-size:32px;
+    opacity:0;
+}
+
+#content-wrapper {
+    margin:0px auto;
+    width:100%;
+    min-width:875px;
+    max-width:1400px;
+    white-space: nowrap;
+    font-size:0px;
+}
+
