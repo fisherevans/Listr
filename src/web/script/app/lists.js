@@ -12,13 +12,6 @@ function addListAction(event) {
 }
 
 // METHODS ########################
-function loadLists() {
-    lists = {};
-    callAPI("lists/getAll", {},
-        function(response) { response.forEach(setList); },
-        function(response) { error("Failed to load lists!"); }
-    );
-}
 
 function refreshLists() {
     $("html").delay(fadeTime).queue(function() {
@@ -64,4 +57,56 @@ function updateListDisplay(list) {
 
 function sortListsDisplay() {
     sortUsingNestedText($("#lists-height-panel"), ".lists-row", ".lists-name");
+}
+
+function selectList(id) {
+    currentList = id;
+    $(".lists-row:not(#lists-" + id + ")").removeClass("current").delay(fadeTime).queue(function() {
+        $("#lists-" + id).addClass("current");
+        $(this).dequeue();
+    });
+}
+
+function toggleFavoriteList(id) {
+    var action = lists[id].favorited == 1 ? "un" : "";
+    callAPI("lists/" + action + "favorite", {"list_id":id},
+        function(list) { lists[id] = list; },
+        function(response) { error("Failed to favorite list!"); }
+    );
+    var icon = lists[id].favorited == 1 ? "2" : "";
+    debug(icon);
+    $("#lists-" + id + " .lists-favorite").removeClass("icon-star icon-star2").addClass("icon-star" + icon);
+}
+
+function addList() {
+    var listName = $("#add-list-input").val();
+    $("#add-list-input").val("");
+    callAPI("lists/add", {"name":listName, "description":"A newly made list."},
+        function(list) {
+            $("#add-item-input").val("");
+            setList(list);
+            addListDisplay(list);
+            sortListsDisplay();
+            selectList(list.id);
+            gotoListItems(list.id);
+        },
+        function(response) { error("Failed to add item!"); }
+    );
+}
+
+function updateCurrentList() {
+    callAPIAsync("lists/get", true, {"list_id":lists[currentList].id},
+        function(list) {
+            setList(list);
+            updateListTimeDisplays();
+        },
+        function(response) { error("Failed to update list!"); }
+    );
+}
+
+function updateListTimeDisplays() {
+    $("#lists .time").each(function() {
+        list = lists[$(this).data("listid")];
+        $(this).text(timeAgo(list.last_updated_date));
+    });
 }

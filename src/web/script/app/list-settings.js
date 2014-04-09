@@ -48,30 +48,29 @@ function archiveListAction(event) {
 }
 
 // METHODS #############################
-function updateList() {
 
+function showListSettings() {
+    $(".page").removeClass("visible");
+    $("#settings").delay(fadeTime).queue(function() {
+        $(".page").addClass("no-display");
+        $(this).removeClass("no-display");
+        $(this).dequeue();
+    }).delay(0).queue(function() {
+        $("#settings-name").val(lists[currentList].name);
+        $("#settings-description").val(lists[currentList].description);
+        $(this).addClass("visible");
+        $(this).dequeue();
+    });
 }
 
-function resetListInfo() {
-
-}
-
-function shareList() {
-
-}
-
-function archiveList() {
-
-}
-
-function restoreList() {
-
-}
-
-function deleteList() {
-
-}
-
-function giveList() {
-
+function showListManagement() {
+    $(".page").removeClass("visible");
+    $("#list-management").delay(fadeTime).queue(function() {
+        $(".page").addClass("no-display");
+        $(this).removeClass("no-display");
+        $(this).dequeue();
+    }).delay(0).queue(function() {
+        $(this).addClass("visible");
+        $(this).dequeue();
+    });
 }
