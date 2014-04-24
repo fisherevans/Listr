@@ -66,6 +66,100 @@
             okResponse("User registered, email sent.");
         }
         
+        function update() {
+            global $json;
+            $username = getJson("username");
+            $password = getRawJson("password");
+            $passwordNew = getRawJson("passwordNew");
+            $email = getRawJson("email");
+            $first_name = getJson("first_name");
+            $last_name = getJson("last_name");
+            
+            requireValidPassword($passwordNew);
+            requireValidEmail($email);
+            requireValidName($first_name);
+            requireValidName($last_name);
+            
+            $okMessage = "User updated.";
+            
+            $user = sqlGetUser($username);
+            
+            if(!password_verify($password, $user['password_hash']))
+                response(403, "Current password is invalid.");
+            
+            if($email != $user['email']) {
+                $better_token = md5(rand());
+                $rem = strlen($better_token)-4;
+                $code = strtoupper(substr($better_token, 0, -$rem));
+                
+                $codeUrl = "http://listr.fisherevans.com/validateEmail/$username/$code";
+                
+                $message = "<h1>Listr Email Change</h1>";
+                $message .= "<p>Hello again, $first_name! Please use the link below to update your email.</p>";
+                $message .= "<a href='$codeUrl'>$codeUrl</a>";
+                $message .= "<p>Have a nice day!</p>";
+                if(sendEmail($email, $first_name." ".$last_name, 'Listr Email Change', $message, $message) != 1) {
+                    response(501, "Failed to send email. User not updated.");
+                }
+                sqlChangeEmail($username, $email, $code);
+                $okMessage .= " Check your email to confirm new email.";
+            }
+            
+            sqlUpdateUser($username, password_hash($passwordNew, PASSWORD_DEFAULT), $first_name, $last_name);
+            
+            okResponse($okMessage);
+        }
+        
+        function updateNoPassword() {
+            global $json;
+            $username = getJson("username");
+            $password = getRawJson("password");
+            $email = getRawJson("email");
+            $first_name = getJson("first_name");
+            $last_name = getJson("last_name");
+            
+            requireValidEmail($email);
+            requireValidName($first_name);
+            requireValidName($last_name);
+            
+            $okMessage = "User updated.";
+            
+            $user = sqlGetUser($username);
+            
+            if(!password_verify($password, $user['password_hash']))
+                response(403, "Current password is invalid.");
+            
+            if($email != $user['email']) {
+                $better_token = md5(rand());
+                $rem = strlen($better_token)-4;
+                $code = strtoupper(substr($better_token, 0, -$rem));
+                
+                $codeUrl = "http://listr.fisherevans.com/validateEmail/$username/$code";
+                
+                $message = "<h1>Listr Email Change</h1>";
+                $message .= "<p>Hello again, $first_name! Please use the link below to update your email.</p>";
+                $message .= "<a href='$codeUrl'>$codeUrl</a>";
+                $message .= "<p>Have a nice day!</p>";
+                if(sendEmail($email, $first_name." ".$last_name, 'Listr Email Change', $message, $message) != 1) {
+                    response(501, "Failed to send email. User not updated.");
+                }
+                sqlChangeEmail($username, $email, $code);
+                $okMessage .= " Check your email to confirm new email.";
+            }
+            
+            sqlUpdateUserNoPassword($username, $first_name, $last_name);
+            
+            okResponse($okMessage);
+        }
+        
+        function validateEmail() {
+            $username = getJson("username");
+            $code = getJson("code");
+            if(validateEmail($username, $code)) {
+                okResponse("Email varified.");
+            } else response(400, "Invalid code or user does not exist.");
+        }
+        
         function validate() {
             $username = getJson("username");
             $code = getJson("code");
@@ -76,10 +170,10 @@
         
         function friend() {
             global $username;
-            $friended = getJson("friended");
+            $friended = getJson("friend");
             if(sqlIsValidUser($friended) && $friended != $username) {
                 sqlFriend($friended, $username);
-                okResponse("Friend request sent.");
+                okGetResponse(sqlGetFriend($username, $friended));
             } else response(400, "Invalid User.");
         }
         
@@ -90,20 +184,23 @@
         
         function confirmFriend() {
             global $username;
-            $friender = getJson("friender");
-            if(sqlValidConfrimFriend($username, $friender)) {
-                sqlConfrimFriend($username, $friender);
-                okResponse("Friend request accepted.");
+            $friend = getJson("friend");
+            if(sqlValidFriendRequest($username, $friend)) {
+                sqlConfrimFriend($username, $friend);
+                addFriendedNotification($friend);
+                okGetResponse(sqlGetFriend($username, $friend));
             } else response(400, "Invalid friend request.");
         }
         
         function unfriend() {
             global $username;
             $friend = getJson("friend");
-            if(sqlValidFriend($friend)) {
+            if(sqlValidFriend($username, $friend)) {
+                $friendObj = sqlGetFriend($username, $friend);
                 sqlUnFriend($friend, $username);
                 sqlUnlinkShares($friend, $username);
                 sqlUnlinkShares($username, $friend);
+                addUnfriendedNotification($friendObj);
                 okResponse("Friend removed.");
             } else response(400, "Invalid Friend.");
         }
@@ -117,6 +214,13 @@
     function validateUser($username, $code) {
         if(sqlValidVarification($username, $code)) {
             sqlVarifyUser($username);
+            return true;
+        } return false;
+    }
+    
+    function doValidateEmail($username, $code) {
+        if(sqlValidEmailVarification($username, $code)) {
+            sqlVarifyEmail($username);
             return true;
         } return false;
     }

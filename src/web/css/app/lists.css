@@ -121,7 +121,7 @@
     color:#ff8000;
 }
 
-.lists-settings {
+.lists-action {
     float:right;
     width:24px;
     height:24px;
@@ -133,15 +133,15 @@
     line-height:24px;
 }
 
-.lists-row.current .lists-settings {
+.lists-row.current .lists-action {
     color:#aaa;
 }
 
-.lists-settings:hover {
+.lists-action:hover {
     color:#ccc;
 }
 
-.lists-row.current .lists-settings:hover {
+.lists-row.current .lists-action:hover {
     color:#444;
 }
 

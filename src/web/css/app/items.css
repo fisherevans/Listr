@@ -25,6 +25,10 @@
     color:#444;
 }
 
+#edit-description.hidden {
+    display: none;
+}
+
 .list-item {
     padding:0px 16px;
     padding-right:10px;
@@ -73,7 +77,11 @@
 }
 
 #list-checked-panel .icon-check:before {
-	content: "\e60a";
+    content: "\e621";
+}
+
+#list-unchecked-panel .icon-check:before {
+    content: "\e622";
 }
 
 .list-item-check {

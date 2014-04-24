@@ -4,10 +4,19 @@ var UNCHECKED = 1;
 var CHECKED = 2;
 var ARCHIVED = 3;
 
+var ACCEPTED = 1;
+var WAITING = 2;
+var PENDING = 3;
+
 var NOLIST = -1;
 
+var RENAMED = 0;
+var LOST_ACCESS = 1;
+var REMOVED = 2;
+var UNFRIENDED = 3;
+
 var currentList = NOLIST;
-var user = {}, friends = {}, lists = {}, items = {};
+var user = {}, friends = {}, lists = {}, items = {}, notifications = {};
 
 $(document).ready(function() {
     $("#need-js").remove();
@@ -17,19 +26,32 @@ $(document).ready(function() {
     $("#add-item-input").keydown(addItemAction);
     $("#add-list-input").keydown(addListAction);
     $("body").on('click', ".list-item", itemClickAction);
-    $("#edit-description").on('click', editListAction);
     $("body").on('click', ".autocomplete-suggestions.item-input div", removeAutocompletItemAction);
     
     // Listeners for LISTS pane
     $("body").on('click', ".lists-row", listClickAction);
     
     // Listeners for LIST SETTINGS page
-    $('body').on('click', "#settings-submit", updateListAction);
-    $('body').on('click', "#settings-archive", archiveListAction);
-    $('body').on('click', "#settings-cancel", resetListSettingsAction);
+    $("body").on('click', ".page-list-row-actions .unshare", unshareListAction);
     
     // Listeners for PROFILE page
+    $("body").on('click', ".page-list-row-actions .confirmFriend", confirmFriendAction);
+    $("body").on('click', ".page-list-row-actions .removeFriend", removeFriendAction);
+
     // Listeners for LIST MGMT page
+    $("body").on('click', ".page-list-row-actions .view", mgmtViewAction);
+    $("body").on('click', ".page-list-row-actions .restore", mgmtRestoreAction);
+    $("body").on('click', ".page-list-row-actions .archive", mgmtArchiveAction);
+    $("body").on('click', ".page-list-row-actions .delete", mgmtDeleteAction);
+    $("body").on('click', ".page-list-row-actions .ignore", mgmtIgnoreAction);
+    $("body").on('click', ".page-list-row-actions .acceptShare", mgmtAcceptShareAction);
+
+    // Notifications
+    $("body").on('click', ".page-list-row-actions .acceptShareNot", notAcceptAction);
+    $("body").on('click', ".page-list-row-actions .ignoreNot", notIgnoreAction);
+    $("body").on('click', ".page-list-row-actions .confirmFriendNot", notConfirmAction);
+    $("body").on('click', ".page-list-row-actions .removeFriendNot", notRemoveAction);
+    $("body").on('click', ".page-list-row-actions .okayNot", notOkayAction);
     
     setInterval(updateListTimeDisplays, 1000*60);
 
@@ -38,6 +60,8 @@ $(document).ready(function() {
         $(this).dequeue();
     }).delay(fadeTime).queue(function() {
         loadUser();
+        loadFriends();
+        loadNotifications();
         $('#loading').fadeTo(fadeTime, 0);
         $(this).dequeue();
     }).delay(fadeTime).queue(function() {
@@ -56,6 +80,7 @@ $(document).ready(function() {
             else if(action == 'settings') gotoListSettings(actionId);
             else if(action == 'lists') gotoListManagement();
             else if(action == 'profile') gotoProfile();
+            else if(action == 'notifications') gotoNotifications();
             $(this).dequeue();
         });
         $(this).dequeue();
@@ -75,30 +100,27 @@ function gotoListSettings(id) {
     selectList(id);
     showListSettings();
     setSettingsURL(lists[id]);
+    countNotifications();
 }
 
 function gotoListItems(id) {
     selectList(id);
     refreshItems();
     setListURL(lists[id]);
+    countNotifications();
 }
 
 function gotoProfile() {
     selectList(NOLIST);
     showProfile();
     nextPage("/profile", "Profile & Friends");
-}
-
-function gotoListManagement() {
-    selectList(NOLIST);
-    showListManagement();
-    nextPage("/lists", "Profile & Friends");
+    countNotifications();
 }
 
 function loadLists() {
     lists = {};
     callAPI("lists/getAll", {},
-        function(response) { response.forEach(setList); },
+        function(response) { response.forEach(setList); countNotifications(); },
         function(response) { error("Failed to load lists!"); }
     );
 }
@@ -112,14 +134,28 @@ function setList(list) {
 function loadItems() {
     items = {};
     callAPI("lists/items/getAll", {"list_id":currentList},
-        function(response) { response.forEach(setItem); },
+        function(response) { response.forEach(setItem); countNotifications(); },
         function(response) { error("Failed to load items!"); }
+    );
+}
+
+function loadNotifications() {
+    notifications = {}
+    callAPI("notifications/getAll", {},
+        function(response) { response.forEach(setNotification); },
+        function(response) { error("Failed to load notifications!"); }
     );
 }
 
 function setItem(item) {
     item.value = item.name;
     items[item.id] = item;
+}
+
+function setNotification(notification) {
+    notification.last_updated_date = new Date(notification.date.replace(" ", "T"));
+    notification.last_updated_date.setHours(notification.last_updated_date.getHours()+4);
+    notifications[notification.id] = notification;
 }
 
 function setSettingsURL(list) {
@@ -150,25 +186,4 @@ function nextPage(path, title) {
 
 function pageListener(event) {
 
-}
-
-function logout() {
-    callAPIAsync("users/logout", true, {},
-        function(list) { info("Logged out"); },
-        function(response) { error("Failed to logout!"); }
-    );
-    $.cookie("loginError", "Logged out.", { path: '/' });
-    $('html').queue(function() {
-        hideAllPages();
-        $(this).dequeue();
-    }).delay(fadeTime).queue(function() {
-        $("#lists").fadeTo(fadeTime, 0);
-        $(this).dequeue();
-    }).delay(fadeTime).queue(function() {
-        $("#banner").fadeTo(fadeTime, 0);
-        $(this).dequeue();
-    }).delay(fadeTime).queue(function() {
-        window.location.href = "/login";
-        $(this).dequeue();
-    })
 }

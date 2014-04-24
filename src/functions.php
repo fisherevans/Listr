@@ -1,10 +1,8 @@
 <?php
 
     function customError($errno, $errstr) {
-        echo "<textarea style='width:100%;height:100%;'>";
         echo "[$errno] $errstr\n\n";
         debug_print_backtrace();
-        echo "</textarea>";
         exit;
     }
     set_error_handler("customError");

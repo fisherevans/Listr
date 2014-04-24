@@ -36,6 +36,12 @@ function refreshItems() {
         registerNewItemAutocomplete();
         $("#list-description .text").text(lists[currentList].description);
         $("#list-description .text").prepend("<b>" + $("<div/>").text(lists[currentList].name).html() + ": </b>");
+        if(lists[currentList].owner == user.username) {
+            $("#edit-description").removeClass("hidden");
+        } else {
+            $("#edit-description").addClass("hidden");
+            $("#list-description .text").prepend("This list is owned by " + lists[currentList].owner + ".<br />");
+        }
         $(this).addClass("visible");
         $(this).dequeue();
     });

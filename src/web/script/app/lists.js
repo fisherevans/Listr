@@ -3,6 +3,7 @@ function listClickAction(event) {
     var id = $(event.target).closest(".lists-row").data("listid");
     if($(event.target).hasClass("lists-settings")) gotoListSettings(id);
     else if($(event.target).hasClass("lists-favorite")) toggleFavoriteList(id);
+    else if($(event.target).hasClass("lists-shared")) gotoListManagement();
     else gotoListItems(id);
 }
 
@@ -27,7 +28,7 @@ function refreshLists() {
 }
 
 function addListDisplay(list) {
-    if(list.archived != 1) {
+    if(list.archived != 1 && list.share_status != 0) {
         $("#lists-height-panel").append(getListHTML(list));
         if(list.id == currentList) $("#lists-" + list.id).addClass("current");
         sortListsDisplay();

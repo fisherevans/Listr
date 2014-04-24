@@ -35,6 +35,7 @@
     height:24px;
     line-height:22px;
     padding:28px;
+    padding-right:10px;
     color:#aaa;
     font-size:24px;
 }
@@ -49,6 +50,20 @@
     height:60px;
     width:60px;
     padding:10px 0px;
+}
+
+#profile-icon {
+    float:left;
+    display:inline-block;
+    height:24px;
+    padding:24px 0px;
+    color:#aaa;
+    font-size:32px;
+    line-height:28px;
+}
+
+#profile:hover #profile-icon, #profile.show  #profile-icon {
+    color:#fff;
 }
 
 #profile-arrow {
@@ -93,7 +108,7 @@
     color:#aaa;
 }
 
-#notifications {
+#notifications-button {
     float: right;
     height:40px;
     width:40px;
@@ -108,17 +123,17 @@
     text-align:center;
 }
 
-#notifications:hover{
+#notifications-button:hover{
     background-color:#aaa;
     color:#444;
 }
 
-#notifications.new {
+#notifications-button.new {
     background-color:#0080ff;
     color:#fff;
 }
 
-#notifications.new:hover{
+#notifications-button.new:hover{
     background-color:#fff;
     color:#0080ff;
 }

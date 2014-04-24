@@ -25,6 +25,7 @@
     require_once('api/user.php');
     require_once('api/list.php');
     require_once('api/item.php');
+    require_once('api/notifications.php');
     
     require_once('router.php');
     

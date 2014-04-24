@@ -17,6 +17,12 @@ function route($path) {
             } else
                 redirect("/login");
             return;
+        case "validateEmail":
+            $username = array_shift($path);
+            $code = array_shift($path);
+            doValidateEmail($username, $code);
+            redirect("/profile");
+            return;
         case "style":
             setStyleContent();
             return;

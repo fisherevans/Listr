@@ -55,37 +55,40 @@ function login() {
 
 function register() {
     startLoading("register");
-    var data = formToJson("register-form");
-    var errors = "";
-    if(!isValidUsername(data.username))
-        errors += "Usernames must be alphanumeric and between 2 and 24 characters long.<br>";
-    if(!isValidPassword(data.password))
-        errors += "Passwords must be at least 6 characters long.<br>";
-    if(data.password_confirm != data.password)
-        errors += "Passwords do not match.<br>";
-    if(!isValidEmail(data.email))
-        errors += "Please use a valid email.<br>";
-    if(!isValidName(data.first_name) || !isValidName(data.last_name))
-        errors += "Names may only use letters, spaces and periods.<br>";
-        
-    if(errors.length > 0) {
-        showError("register", errors);
-        stopLoading("register");
-    } else {
-        registerUsername = data.username;
-        registerPassword = data.password;
-        callAPI("users/register", data,
-            function(response) {
-                debug("registered!");
-                stopLoading("register");
-                switchWindow("validate");
-            },
-            function(response) {
-                stopLoading("register");
-                showError("register", response.response);
-            }
-        );
-    }
+    $("html").delay(0).queue(function() {
+        var data = formToJson("register-form");
+        var errors = "";
+        if(!isValidUsername(data.username))
+            errors += "Usernames must be alphanumeric and between 2 and 24 characters long.<br>";
+        if(!isValidPassword(data.password))
+            errors += "Passwords must be at least 6 characters long.<br>";
+        if(data.password_confirm != data.password)
+            errors += "Passwords do not match.<br>";
+        if(!isValidEmail(data.email))
+            errors += "Please use a valid email.<br>";
+        if(!isValidName(data.first_name) || !isValidName(data.last_name))
+            errors += "Names may only use letters, spaces and periods.<br>";
+            
+        if(errors.length > 0) {
+            showError("register", errors);
+            stopLoading("register");
+        } else {
+            registerUsername = data.username;
+            registerPassword = data.password;
+            callAPI("users/register", data,
+                function(response) {
+                    debug("registered!");
+                    stopLoading("register");
+                    switchWindow("validate");
+                },
+                function(response) {
+                    stopLoading("register");
+                    showError("register", response.response);
+                }
+            );
+        }
+        $(this).dequeue();
+    });
 }
 
 function validate() {

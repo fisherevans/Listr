@@ -92,7 +92,7 @@
     }
     
     function sqlGetUserSelf($username) {
-        return sqlUnique("SELECT username, email, first_name, last_name from users where username=?",
+        return sqlUnique("SELECT username, email, first_name, last_name, (SELECT count(*) from email_change WHERE user=users.username) as email_change from users where username=?",
                 $username);
     }
     
@@ -111,8 +111,36 @@
                 $username, $hash, $email, $first_name, $last_name, $unique_code);
     }
     
-    function sqlVarifyUser($username) {
-        sqlRun("UPDATE users set varified=true where username=?",
+    function sqlUpdateUser($username, $hash, $first_name, $last_name) {
+        sqlRun("UPDATE users SET password_hash=?, first_name=?, last_name=? WHERE username=?",
+                $hash, $first_name, $last_name, $username);
+    }
+    
+    function sqlUpdateUserNoPassword($username, $first_name, $last_name) {
+        sqlRun("UPDATE users SET first_name=?, last_name=? WHERE username=?",
+                $first_name, $last_name, $username);
+    }
+    
+    function sqlChangeEmail($username, $email, $code) {
+        if(sqlCount("SELECT * from email_change where user=?", $username) > 0) {
+            sqlRun("UPDATE email_change SET email=?, code=? WHERE user=?",
+                    $email, $code, $username);
+        } else {
+            sqlRun("INSERT into email_change (user, email, code) VALUES (?, ?, ?)",
+                    $username, $email, $code);
+        }
+    }
+    
+    function sqlValidEmailVarification($username, $code) {
+        return sqlCount("SELECT * from email_change where user=? AND code=?", 
+                $username, $code) > 0;
+    }
+    
+    function sqlVarifyEmail($username) {
+        $email = sqlUnique("SELECT * from email_change WHERE user=?", $username)['email'];
+        sqlRun("UPDATE users set email=? where username=?",
+                $email, $username);
+        sqlRun("DELETE from email_change where user=?",
                 $username);
     }
     
@@ -121,9 +149,16 @@
                 $username, $code) > 0;
     }
     
+    function sqlVarifyUser($username) {
+        sqlRun("UPDATE users set varified=true where username=?",
+                $username);
+    }
+    
     function sqlFriend($friended, $username) {
-        sqlRun("INSERT into friends (friended, friender) VALUES (?, ?)",
-                $friended, $username);
+        if(sqlCount("SELECT * from friends where friender=? AND friended=?", $username, $friended) == 0) {
+            sqlRun("INSERT into friends (friended, friender) VALUES (?, ?)",
+                    $friended, $username);
+        }
     }
     
     function sqlConfrimFriend($friended, $friender) {
@@ -136,23 +171,70 @@
                 $friended, $friender) > 0;
     }
     
-    function sqlValidFriend($friended, $friender) {
-        return sqlCount("SELECT * from friends where friended=? AND friender=? AND accepted=true", 
-                $friended, $friender) > 0 ||
-                sqlCount("SELECT * from friends where friender=? AND friended=? AND accepted=true", 
-                $friended, $friender) > 0 ;
+    function sqlValidFriend($user, $friend) {
+        return sqlCount("SELECT * from friends where friended=? AND friender=?", 
+                $user, $friend) > 0 ||
+                sqlCount("SELECT * from friends where friender=? AND friended=?", 
+                $user, $friend) > 0 ;
     }
     
-    function sqlGetFriends($username) {
-        return sqlQuery("SELECT *, (?=friends.friender) as waiting FROM friends WHERE friended=? OR friender=?",
-                        $username, $username, $username);
+    function sqlValidFriendRequest($user, $friend) {
+        return sqlCount("SELECT * from friends where friended=? AND friender=?", 
+                $user, $friend) > 0 ;
     }
+                        
+    function sqlGetFriends($username) {
+        return sqlQuery("SELECT friends.friended AS friend, " .
+                        "(friends.accepted + (friends.accepted=0)*2) AS state, " .
+                        "if(accepted=0,'',users.first_name) as first_name, " .
+                        "if(accepted=0,'',users.last_name) as last_name " .
+                        "FROM friends " .
+                        "JOIN users on(friends.friended=users.username) " .
+                        "WHERE friends.friender=? " .
+                        "UNION " .
+                        "SELECT friends.friender AS friend, " .
+                        "(friends.accepted + (friends.accepted=0)*3) AS state, " .
+                        "users.first_name as first_name, " .
+                        "users.last_name as last_name " .
+                        "FROM friends " .
+                        "JOIN users on(friends.friender=users.username) " .
+                        "WHERE friends.friended=?;",
+                        $username, $username);
+    }
+    
+    function sqlGetFriend($username, $friend) {
+        return sqlUnique("SELECT friends.friended AS friend, " .
+                        "(friends.accepted + (friends.accepted=0)*2) AS state, " .
+                        "if(accepted=0,'',users.first_name) as first_name, " .
+                        "if(accepted=0,'',users.last_name) as last_name " .
+                        "FROM friends " .
+                        "JOIN users on(friends.friended=users.username) " .
+                        "WHERE friends.friender=? AND friends.friended=? " .
+                        "UNION " .
+                        "SELECT friends.friender AS friend, " .
+                        "(friends.accepted + (friends.accepted=0)*3) AS state, " .
+                        "users.first_name as first_name, " .
+                        "users.last_name as last_name " .
+                        "FROM friends " .
+                        "JOIN users on(friends.friender=users.username) " .
+                        "WHERE friends.friended=? AND friends.friender=?;",
+                        $username, $friend, $username, $friend);
+    }
+    
+    // (accepted + ((accepted=0)*2)) as state
     
     function sqlUnFriend($friend, $username) { 
         sqlRun("DELETE from friends where friended=? and friender=?",
                 $friend, $username);
         sqlRun("DELETE from friends where friender=? and friended=?",
                 $friend, $username);
+    }
+    
+    function sqlAreFriends($user1, $user2) {
+        return sqlCount("SELECT friended as friend FROM friends WHERE friender=? AND friended=? AND accepted=1 " .
+                        "UNION " .
+                        "SELECT friender as friend FROM friends WHERE friended=? AND friender=? AND accepted=1",
+                        $user1, $user2, $user1, $user2) > 0;
     }
     
     // ############# LISTS ###############
@@ -168,20 +250,20 @@
     }
     
     function sqlGetUserList($username, $id) {
-        return sqlUnique("SELECT lists.*, (favorites.user is not null) as favorited " .
-                         "from lists LEFT OUTER JOIN favorites on (lists.id=favorites.list_id) " .
+        return sqlUnique("SELECT lists.*, (favorites.user is not null) as favorited, if(lists.owner=?,1,shared.accepted) as share_status " .
+                         "from lists LEFT OUTER JOIN shared ON(lists.id=shared.list_id AND ?=shared.user) LEFT OUTER JOIN favorites on (lists.id=favorites.list_id) " .
                          "and (?=favorites.user) WHERE id=?",
-                $username, $id);
+                $username, $username, $username, $id);
     }
     
     function sqlGetLists($username) {
-        return sqlQuery("SELECT DISTINCT (lists.owner=?) as is_owner, lists.*, (favorites.user is not null) as favorited " .
+        return sqlQuery("SELECT DISTINCT (lists.owner=?) as is_owner, lists.*, (favorites.user is not null) as favorited, if(lists.owner=?,1,shared.accepted) as share_status " .
                         "FROM   lists " .
                         "LEFT OUTER JOIN shared ON(lists.id=shared.list_id) " .
                         "LEFT OUTER JOIN favorites on (lists.id=favorites.list_id) and (?=favorites.user) " .
                         "WHERE  lists.owner=? OR shared.user=? " .
                         "ORDER BY favorited DESC, is_owner DESC, lists.name ASC",
-                        $username, $username, $username, $username);
+                        $username, $username, $username, $username, $username);
     }
     
     function sqlGetArchivedStateLists($username, $state) {
@@ -218,6 +300,11 @@
                 $shared, $id);
     }
     
+    function sqlAcceptShareList($shared, $id) {
+        sqlRun("UPDATE shared SET accepted=1 WHERE list_id=? AND user=?",
+                $id, $shared);
+    }
+    
     function sqlUpdateList($name, $description, $id, $username) {
         sqlRun("UPDATE lists SET name=?, description=? WHERE id=? AND owner=?",
                 $name, $description, $id, $username);
@@ -225,6 +312,10 @@
     
     function sqlRemoveList($id) {
         sqlRun("DELETE from shared where list_id=?",
+                $id);
+        sqlRun("DELETE from favorites where list_id=?",
+                $id);
+        sqlRun("DELETE from items where list_id=?",
                 $id);
         sqlRun("DELETE from lists where id=?",
                 $id);
@@ -266,6 +357,14 @@
     function sqlUserUpdateList($time, $username, $list_id) {
         sqlRun("UPDATE lists SET last_updated=?, last_updater=? WHERE id=?",
             $time, $username, $list_id);
+    }
+    
+    function sqlGetSharedList($list_id) {
+        return sqlQuery("select * from shared where list_id=?", $list_id);
+    }
+    
+    function sqlIsListShared($list_id, $user) {
+        return sqlCount("select * from shared where list_id=? AND user=?", $list_id, $user) > 0;
     }
     
     // ############# ITEMS ###############
@@ -323,5 +422,42 @@
     function sqlItemByName($list_id, $name) {
         return sqlUnique("select *, name as value from items where list_id=? and name=?",
                 $list_id, $name);
+    }
+
+    // NOTIFICATIONS
+    function sqlGetNotifications($user) {
+        return sqlQuery("SELECT * FROM notifications WHERE user=?",$user);
+    }
+
+    function sqlRemoveNotification($id) {
+        sqlRun("DELETE FROM notifications WHERE id=?", $id);
+    }
+
+    function sqlRemoveAllNotifications($user) {
+        sqlRun("DELETE FROM notifications WHERE user=?", $user);
+    }
+
+    function sqlIsNotificationOwner($user, $id) {
+        return sqlCount("SELECT id FROM notifications WHERE user=? AND id=?", $user, $id) > 0;
+    }
+
+    function sqlAddNotification($user, $type, $data, $message) {
+        sqlRun("INSERT INTO notifications (user, type, data, message) VALUES (?, ?, ?, ?)", $user, $type, $data, $message);
+    }
+
+    function sqlGetNotificationById($id) {
+        return sqlUnique("SELECT * FROM notifications WHERE id=?", $id);
+    }
+
+    function sqlGetNotification($user, $type, $data) {
+        return sqlUnique("SELECT * FROM notifications WHERE user=? AND type=? AND data=?", $user, $type, $data);
+    }
+
+    function sqlIsNotification($user, $type, $data) {
+        return sqlCount("SELECT id FROM notifications WHERE user=? AND type=? AND data=?", $user, $type, $data) > 0;
+    }
+
+    function sqlUpdateNotification($id, $message) {
+        sqlRun("UPDATE notifications (SET data=?, message=?, date=now() WHERE id=?", $message, $id);
     }
 ?>

@@ -15,6 +15,11 @@
             response(400, "$username is not a valid user.");
     }
     
+    function requireValidUsername($username) {
+        if(!sqlIsValidUser($username))
+            response(400, "$username is not a valid user.");
+    }
+    
     function requireValidCredentials($username, $password) {
         if(!password_verify($password, sqlGetUser($username)['password_hash']))
             response(400, "Either the user $username doesn't exist or the supplied password is incorrect.");
@@ -48,8 +53,13 @@
     }
     
     function requireValidName($name) {
-        if(strlen($name) < 1 || strlen($name) > 45 || !preg_match("/^[a-zA-Z -\.]+$/", $name))
-            response(400, "Names may only contain letters, -'s, _'s and spaces.");
+        if(strlen($name) < 1 || strlen($name) > 45 || !preg_match('/^[a-zA-Z\- \.]+$/', $name))
+            response(400, "Names must be less than 45 characters and only contain letters, -'s, spaces and .'s.");
+    }
+    
+    function requireValidListName($name) {
+        if(strlen($name) < 1 || strlen($name) > 45)
+            response(400, "Names must be less than 45 characters.");
     }
     
     function requireValidItemName($name) {
@@ -60,5 +70,10 @@
     function requireValidListItem($list_id, $item_id) {
         if(!sqlIsValidListItem($list_id, $item_id))
             response(400, "Invalid item ID.");
+    }
+    
+    function requireFriends($user1, $user2) {
+        if(!sqlAreFriends($user1, $user2))
+            response(400, "Invalid friend.");
     }
 ?>

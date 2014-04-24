@@ -8,6 +8,7 @@
     max-width:840px;
     font-size:18px;
     color:#000;
+    margin-bottom:40px;
     -webkit-transition: opacity 0.25s ease, max-width 0.25s ease, min-width 0.25s ease;
        -moz-transition: opacity 0.25s ease, max-width 0.25s ease, min-width 0.25s ease;
         -ms-transition: opacity 0.25s ease, max-width 0.25s ease, min-width 0.25s ease;
@@ -36,11 +37,23 @@
 .page-label {
     color:#888;
     font-size:24px;
+    line-height:32px;
     display:block;
     width:100%;
     text-align:center;
     font-weight:400;
     padding-top:15px;
+    overflow:hidden;
+    -webkit-transition: line-height 0.25s ease, padding 0.25s ease;
+       -moz-transition: line-height 0.25s ease, padding 0.25s ease;
+        -ms-transition: line-height 0.25s ease, padding 0.25s ease;
+         -o-transition: line-height 0.25s ease, padding 0.25s ease;
+            transition: line-height 0.25s ease, padding 0.25s ease;
+}
+
+.page-label.hide {
+    line-height:0px;
+    padding-top:0px;
 }
 
 .page-input {
@@ -91,6 +104,17 @@ select.pafe-input {
     text-align:center;
 }
 
+.button-icon {
+    font-size:24px;
+    padding-left:5px;
+    color:#fff;
+}
+
+.button-icon.small {
+    font-size:16px;
+    padding-left:2px;
+}
+
 .page-button:hover {
     background-color:#888;
 }
@@ -117,6 +141,7 @@ select.pafe-input {
     line-height:20px;
     color:#888;
     font-weight:400;
+    padding-top:10px;
 }
 
 .page-list {
@@ -127,25 +152,44 @@ select.pafe-input {
 }
 
 .page-list-row {
-    height:24px;
     overflow:hidden;
     font-size:24px;
     line-height:18px;
     color:#000;
     background-color:#f4f4f4;
-    padding:8px 0px;
-    margin:8px 0px;
+    padding:0px;
+    margin:0px;
     width:100%;
-    border-top:2px solid #f4f4f4;
-    border-bottom:2px solid #f4f4f4;
+    border-top:0px solid #f4f4f4;
+    border-bottom:0px solid #f4f4f4;
     position:relative;
     vertical-align:middle;
+    height:0px;
+    -webkit-transition: color 0.25s ease, background 0.25s ease, height 0.25s ease, padding 0.25s ease, margin 0.25s ease, border 0.25s ease;
+       -moz-transition: color 0.25s ease, background 0.25s ease, height 0.25s ease, padding 0.25s ease, margin 0.25s ease, border 0.25s ease;
+           -ms-transition: color 0.25s ease, background 0.25s ease, height 0.25s ease, padding 0.25s ease, margin 0.25s ease, border 0.25s ease;
+            -o-transition: color 0.25s ease, background 0.25s ease, height 0.25s ease, padding 0.25s ease, margin 0.25s ease, border 0.25s ease;
+               transition: color 0.25s ease, background 0.25s ease, height 0.25s ease, padding 0.25s ease, margin 0.25s ease, border 0.25s ease;
+}
+
+.page-list-row.show {
+    height:24px;
+    padding:8px 0px;
+    margin:8px 0px;
+    border-top:2px solid #f4f4f4;
+    border-bottom:2px solid #f4f4f4;
+}
+
+.page-list-row.show:hover {
+    background-color:#f0f0f0;
+    border-top:2px solid #ddd;
+    border-bottom:2px solid #ddd;
 }
 
 .page-list-row:hover {
     background-color:#f0f0f0;
-    border-top:2px solid #ddd;
-    border-bottom:2px solid #ddd;
+    border-top:0px solid #ddd;
+    border-bottom:0px solid #ddd;
 }
 
 .page-list-row-label, .page-list-row-note {
@@ -153,6 +197,10 @@ select.pafe-input {
     padding-left:8px;
     vertical-align:middle;
     line-height:0px;
+}
+
+.page-list-row-label.grey {
+    color:#888;
 }
 
 .page-list-row-note {
@@ -209,6 +257,10 @@ select.pafe-input {
 .page-list-row-action.red:hover {
     color:#fff;
     background-color:#FF0000;
+}
+
+.page-list-row-action.bold {
+    font-weight:700;
 }
 
 .page-hr {
