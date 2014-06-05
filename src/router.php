@@ -9,11 +9,10 @@ function route($path) {
             $username = array_shift($path);
             $code = array_shift($path);
             if(validateUser($username, $code)) {
-                $sessionID = createSessionID($username);
-                $_SESSION['username'] = $username;
-                $_SESSION['sessionID'] = $sessionID;
-                sqlAddSessionID($username, $sessionID, date("Y-m-d H:i:s"));
-                redirect("/");
+                session_unset();
+                session_destroy();
+                setcookie("verified", $_SERVER['REQUEST_URI'], time()+3600*24*265, "/");
+                redirect("/login");
             } else
                 redirect("/login");
             return;

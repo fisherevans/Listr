@@ -70,4 +70,12 @@
     </form>
 </div>
 
+<div id='verified-window' class='login-box'>
+    <h1>Verified</h1>
+    <p>
+        Your email address has been verified! You may now login.
+    </p>
+    <span class='link' onClick='javascript:switchWindow("login");'>Login</span>
+</div>
+
 <script src="/web/script/login.js"></script>

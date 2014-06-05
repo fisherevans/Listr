@@ -3,11 +3,16 @@ var registerUsername = "";
 var registerPassword = "";
 
 $(document).ready(function() {
+    var target = "login";
     if($.cookie("loginError") != undefined) {
         showError("login", $.cookie("loginError"));
         $.removeCookie("loginError");
     }
-    $('#login-window').fadeIn(fadeTime);
+    if($.cookie("verified") != undefined) {
+        target = "verified";
+        $.removeCookie("verified");
+    }
+    $('#' + target + '-window').fadeIn(fadeTime);
     $(window).resize(function() {
         if($(window).width() <= 425)
             $("#back").addClass("dark");
@@ -100,21 +105,10 @@ function validate() {
         function(response) {
             debug("validated!");
             stopLoading("validate");
-            loginAfterValidate(data);
+            switchWindow("verified");
         },
         function(response) {
             stopLoading("validate");
-            showError("validate", response.response);
-        }
-    );
-}
-
-function loginAfterValidate(data) {
-    callAPI("users/login", data,
-        function(response) {
-            leave("/");
-        },
-        function(response) {
             showError("validate", response.response);
         }
     );

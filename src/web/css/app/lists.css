@@ -1,206 +1,209 @@
-
-
-#lists {
-    position: relative;
-    display:inline-block;
-    vertical-align: top;
-    width:40%;
-    min-width:350px;
-    max-width:560px;
-    background-color:#000;
-    text-align:center;
-    opacity:0;
-}
-
-#lists-panel {
-    overflow:hidden;
-}
-
-.lists-row {
-    border-bottom:1px solid #888;
-    height:0px;
-    width:100%;
-    overflow:hidden;
-    cursor:pointer;
-    background-color:#000;
-    -webkit-transition: color 0.25s ease, background 0.25s ease, height 0.25s ease;
-       -moz-transition: color 0.25s ease, background 0.25s ease, height 0.25s ease;
-           -ms-transition: color 0.25s ease, background 0.25s ease, height 0.25s ease;
-            -o-transition: color 0.25s ease, background 0.25s ease, height 0.25s ease;
-            transition: color 0.25s ease, background 0.25s ease, height 0.25s ease;
-}
-
-.lists-row.show {
-    height:80px;
-}
-
-.lists-row:hover {
-    background-color:#222;
-}
-
-.lists-row.current {
-    background-color:#fff;
-}
-
-.lists-row.current:hover {
-    background-color:#fff;
-}
-
-.lists-name {
-    display:block;
-    white-space: nowrap;
-    font-size:36px;
-    padding-top:7px;
-    height:43px;
-    color:#fff;
-    margin:0px 80px;
-    -webkit-transition: color 0.25s ease;
-       -moz-transition: color 0.25s ease;
-           -ms-transition: color 0.25s ease;
-            -o-transition: color 0.25s ease;
-            transition: color 0.25s ease;
-    text-align:left;
-}
-
-.lists-row.current .lists-name {
-    color:#000;
-}
-
-.lists-row:hover .lists-name {
-    color:#FF7F00;
-}
-
-.lists-row.current:hover .lists-name {
-    color:#ff8000;
-}
-
-
-.lists-desc {
-    display:block;
-    height:30px;
-    font-size:12px;
-    color:#888;
-    margin:0px 80px;
-    white-space: nowrap;
-    text-align:left;
-}
-
-.lists-favorite {
-    float:left;
-    width:24px;
-    height:24px;
-    margin:28px;
-    cursor:pointer;
-    z-index:1;
-    color:#888;
-    font-size:24px;
-    line-height:24px;
-}
-
-.lists-row.current .lists-favorite {
-    color:#aaa;
-}
-
-.lists-row.current .lists-favorite.icon-star2, .lists-favorite.icon-star2 {
-    color:#ff8000;
-}
-
-.lists-favorite:hover {
-    color:#ccc;
-}
-
-.lists-row.current .lists-favorite:hover {
-    color:#444;
-}
-
-.lists-row.current .lists-favorite.icon-star2:hover {
-    color:#ff8000;
-}
-
-.lists-favorite.icon-star2:hover {
-    color:#ff8000;
-}
-
-.lists-action {
-    float:right;
-    width:24px;
-    height:24px;
-    margin:28px;
-    cursor:pointer;
-    z-index:1;
-    color:#666;
-    font-size:24px;
-    line-height:24px;
-}
-
-.lists-row.current .lists-action {
-    color:#aaa;
-}
-
-.lists-action:hover {
-    color:#ccc;
-}
-
-.lists-row.current .lists-action:hover {
-    color:#444;
-}
-
-#add-list {
-    white-space: nowrap;
-    width:100%;
-    padding:18px 0px;
-    height:auto;
-    border-top:1px solid #888;
-    border-bottom:1px solid #888;
-}
-
-#add-list-resize {
-    overflow:hidden;
-    padding-right:45px;
-    padding-left:10px;
-}
-
-#add-list-input {
-    border:3px solid #ccc;
-    font-size:32px;
-    padding:4px;
-    padding-left:10px;
-    margin:0px 8px;
-    width: 100%;
-    display:block;
-}
-
-#add-list-input:focus, #add-list-input:hover {
-    border:3px solid #ff7f00;
-}
-
-#add-list-button {
-    font-size:32px;
-    padding:0px;
-    margin-right:24px;
-    background-color:#ccc;
-    color:#000;
-    cursor:pointer;
-    height:54px;
-    width:54px;
-    line-height:54px;
-    text-align:center;
-    float:right;
-}
-
-#add-list-button:hover {
-    background-color:#ff7f00;
-    color:#fff;
-}
-
-#archived-lists-link  {
-    margin:32px auto;
-    display:inline-block;
-    padding:4px;
-    font-size:16px;
-    color:#fff; 
-}
-
-#archived-lists-link:hover  {
-    color:#FF7f00;
+
+
+#lists {
+    position: relative;
+    display:inline-block;
+    vertical-align: top;
+    width:40%;
+    min-width:350px;
+    max-width:560px;
+    background-color:#000;
+    text-align:center;
+    opacity:0;
+}
+
+#lists-panel {
+    overflow:hidden;
+}
+
+.lists-row {
+    border-bottom:1px solid #888;
+    height:0px;
+    width:100%;
+    overflow:hidden;
+    cursor:pointer;
+    background-color:#000;
+    -webkit-transition: color 0.25s ease, background 0.25s ease, height 0.25s ease;
+       -moz-transition: color 0.25s ease, background 0.25s ease, height 0.25s ease;
+           -ms-transition: color 0.25s ease, background 0.25s ease, height 0.25s ease;
+            -o-transition: color 0.25s ease, background 0.25s ease, height 0.25s ease;
+            transition: color 0.25s ease, background 0.25s ease, height 0.25s ease;
+}
+
+.lists-row.show {
+    height:80px;
+}
+
+.lists-row:hover {
+    background-color:#222;
+}
+
+.lists-row.current {
+    background-color:#fff;
+}
+
+.lists-row.current:hover {
+    background-color:#fff;
+}
+
+.lists-name {
+    display:block;
+    white-space: nowrap;
+    font-size:36px;
+    padding-top:7px;
+    height:43px;
+    color:#fff;
+    margin:0px 80px;
+    -webkit-transition: color 0.25s ease;
+       -moz-transition: color 0.25s ease;
+           -ms-transition: color 0.25s ease;
+            -o-transition: color 0.25s ease;
+            transition: color 0.25s ease;
+    text-align:left;
+    z-index:2;
+    position:relative;
+}
+
+.lists-row.current .lists-name {
+    color:#000;
+}
+
+.lists-row:hover .lists-name {
+    color:#FF7F00;
+}
+
+.lists-row.current:hover .lists-name {
+    color:#ff8000;
+}
+
+
+.lists-desc {
+    display:block;
+    height:30px;
+    font-size:12px;
+    color:#888;
+    margin:0px 80px;
+    white-space: nowrap;
+    text-align:left;
+}
+
+.lists-favorite {
+    float:left;
+    width:24px;
+    height:24px;
+    margin:28px;
+    cursor:pointer;
+    z-index:1;
+    color:#888;
+    font-size:24px;
+    line-height:24px;
+}
+
+.lists-row.current .lists-favorite {
+    color:#aaa;
+}
+
+.lists-row.current .lists-favorite.icon-star2, .lists-favorite.icon-star2 {
+    color:#ff8000;
+}
+
+.lists-favorite:hover {
+    color:#ccc;
+}
+
+.lists-row.current .lists-favorite:hover {
+    color:#444;
+}
+
+.lists-row.current .lists-favorite.icon-star2:hover {
+    color:#ff8000;
+}
+
+.lists-favorite.icon-star2:hover {
+    color:#ff8000;
+}
+
+.lists-action {
+    float:right;
+    width:24px;
+    height:24px;
+    margin:28px;
+    cursor:pointer;
+    z-index:3;
+    color:#666;
+    font-size:24px;
+    line-height:24px;
+    position:relative;
+}
+
+.lists-row.current .lists-action {
+    color:#aaa;
+}
+
+.lists-action:hover {
+    color:#ccc;
+}
+
+.lists-row.current .lists-action:hover {
+    color:#444;
+}
+
+#add-list {
+    white-space: nowrap;
+    width:100%;
+    padding:18px 0px;
+    height:auto;
+    border-top:1px solid #888;
+    border-bottom:1px solid #888;
+}
+
+#add-list-resize {
+    overflow:hidden;
+    padding-right:45px;
+    padding-left:10px;
+}
+
+#add-list-input {
+    border:3px solid #ccc;
+    font-size:32px;
+    padding:4px;
+    padding-left:10px;
+    margin:0px 8px;
+    width: 100%;
+    display:block;
+}
+
+#add-list-input:focus, #add-list-input:hover {
+    border:3px solid #ff7f00;
+}
+
+#add-list-button {
+    font-size:32px;
+    padding:0px;
+    margin-right:24px;
+    background-color:#ccc;
+    color:#000;
+    cursor:pointer;
+    height:54px;
+    width:54px;
+    line-height:54px;
+    text-align:center;
+    float:right;
+}
+
+#add-list-button:hover {
+    background-color:#ff7f00;
+    color:#fff;
+}
+
+#archived-lists-link  {
+    margin:32px auto;
+    display:inline-block;
+    padding:4px;
+    font-size:16px;
+    color:#fff; 
+}
+
+#archived-lists-link:hover  {
+    color:#FF7f00;
 }

@@ -6,7 +6,9 @@
             $description = getJson("description");
             requireValidListName($name);
             $list_id = sqlAddList($name, $description, $username);
-            okGetResponse(sqlGetList($list_id));
+            $list = sqlGetUserList($username, $list_id);
+            $list['shared'] = sqlGetSharedList($list['id']);
+            okGetResponse($list);
         }
         
         function edit() {
@@ -29,6 +31,7 @@
             global $username;
             $list_id = getJson("list_id");
             requirePermission(isListOwner($list_id));
+            addListArchivedNotification($list_id);
             sqlArchiveStateList(true, $list_id);
             userUpdateList($list_id);
             $list = sqlGetUserList($username, $list_id);
@@ -41,6 +44,7 @@
             global $username;
             $list_id = getJson("list_id");
             requirePermission(isListOwner($list_id));
+            addListRestoredNotification($list_id);
             sqlArchiveStateList(false, $list_id);
             userUpdateList($list_id);
             $list = sqlGetUserList($username, $list_id);
@@ -72,6 +76,7 @@
         function remove() {
             $list_id = getJson("list_id");
             requirePermission(isListOwner($list_id));
+            addListRemovedNotification($list_id);
             sqlRemoveList($list_id);
             addListRemovedNotification($list_id);
             okResponse("List removed.");
@@ -122,6 +127,7 @@
             $unshared = getJson("username");
             requirePermission(isListOwner($list_id) || ($unshared == $username && isListSharee($list_id)));
             requireValidUsername($unshared);
+            addListUnsharedNotification($list_id, $unshared);
             sqlUnshareList($unshared, $list_id);
             addListUnsharedNotification($list_id, $unshared);
             okResponse("List unshared.");

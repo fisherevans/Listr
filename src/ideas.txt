@@ -1,10 +1,10 @@
-Last changed/added by USER at TIME for items in a list
-Last updated by USER at TIME for each list
-Allow both users to unshare list
-Notifications
-    PK AI id
-    type_id - i.e. list renamed
-    type_key - i.e. old list id
-    data - arbitrary for logic depending on type i.e. original name
-    message
+Last changed/added by USER at TIME for items in a list
+Last updated by USER at TIME for each list
+Allow both users to unshare list
+Notifications
+    PK AI id
+    type_id - i.e. list renamed
+    type_key - i.e. old list id
+    data - arbitrary for logic depending on type i.e. original name
+    message
     i.e. if a type_id of list rename already exist with the list_id of X, just update the message if needed. 
