@@ -44,7 +44,8 @@
             requireValidEmail($email);
             requireValidName($first_name);
             requireValidName($last_name);
-            
+
+            /* removed for demo-ability
             $better_token = md5(rand());
             $rem = strlen($better_token)-4;
             $code = strtoupper(substr($better_token, 0, -$rem));
@@ -60,8 +61,10 @@
             if(sendEmail($email, $first_name." ".$last_name, 'Listr Registration', $message, $message) != 1) {
                 response(501, "Failed to send email. User not resgister");
             }
+            */
             
-            sqlRegister($username, password_hash($password, PASSWORD_DEFAULT), $email, $first_name, $last_name, $code);
+            sqlRegister($username, password_hash($password, PASSWORD_DEFAULT), $email, $first_name, $last_name, "noop"); //$code);
+            sqlVerifyUser($username); // skip email verification for demo-ability
             
             okResponse("User registered, email sent.");
         }
@@ -86,7 +89,8 @@
             
             if(!password_verify($password, $user['password_hash']))
                 response(403, "Current password is invalid.");
-            
+
+            /*
             if($email != $user['email']) {
                 $better_token = md5(rand());
                 $rem = strlen($better_token)-4;
@@ -101,9 +105,12 @@
                 if(sendEmail($email, $first_name." ".$last_name, 'Listr Email Change', $message, $message) != 1) {
                     response(501, "Failed to send email. User not updated.");
                 }
-                sqlChangeEmail($username, $email, $code);
+                */
+                sqlChangeEmail($username, $email, "no-op"); //$code);
+                /*
                 $okMessage .= " Check your email to confirm new email.";
             }
+            */
             
             sqlUpdateUser($username, password_hash($passwordNew, PASSWORD_DEFAULT), $first_name, $last_name);
             
@@ -156,7 +163,7 @@
             $username = getJson("username");
             $code = getJson("code");
             if(validateEmail($username, $code)) {
-                okResponse("Email varified.");
+                okResponse("Email verified.");
             } else response(400, "Invalid code or user does not exist.");
         }
         
@@ -164,7 +171,7 @@
             $username = getJson("username");
             $code = getJson("code");
             if(validateUser($username, $code)) {
-                okResponse("Email varified.");
+                okResponse("Email verified.");
             } else response(400, "Invalid code or user does not exist.");
         }
         
@@ -212,14 +219,14 @@
     }
     
     function validateUser($username, $code) {
-        if(sqlValidVarification($username, $code)) {
-            sqlVarifyUser($username);
+        if(sqlValidVerification($username, $code)) {
+            sqlVerifyUser($username);
             return true;
         } return false;
     }
     
     function doValidateEmail($username, $code) {
-        if(sqlValidEmailVarification($username, $code)) {
+        if(sqlValidEmailVerification($username, $code)) {
             sqlVarifyEmail($username);
             return true;
         } return false;

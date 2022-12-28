@@ -61,7 +61,7 @@
     <form id='validate-form'>
         <div class='input-row'>
             <span class='input-label'>Code</span>
-            <input class='input-text fadeColor' type='text' id='validate-code' name='code' />
+            <input class='input-text fadeColor' type='text' id='validate-code' name='code' value="noop" /> <!-- noop because email validation is skipped -->
         </div>
         <div class='input-row'>
             <input class='input-button fadeColor' id='validate-submit' type='submit' onClick='validate(); return false;' value='Validate' data-value='Validate' />

@@ -3,8 +3,8 @@
     
     function sqlConnect() {
         global $pdo;
-        $pdo = new PDO('mysql:host=localhost;dbname=fisherev_listr;charset=utf8',
-                'fisherev_listr', 'listr1234%');
+        $pdo = new PDO('mysql:host=db;dbname=listr_app;charset=utf8',
+                'root', 'password');
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
     }
     
@@ -87,37 +87,37 @@
     }
     
     function sqlGetUser($username) {
-        return sqlUnique("SELECT * from users where username=?",
+        return sqlUnique("SELECT * from app_users where username=?",
                 $username);
     }
     
     function sqlGetUserSelf($username) {
-        return sqlUnique("SELECT username, email, first_name, last_name, (SELECT count(*) from email_change WHERE user=users.username) as email_change from users where username=?",
+        return sqlUnique("SELECT username, email, first_name, last_name, (SELECT count(*) from email_change WHERE user=app_users.username) as email_change from app_users where username=?",
                 $username);
     }
     
     function sqlIsValidUser($username) {
-        return sqlCount("SELECT * from users where username=? AND varified=1",
+        return sqlCount("SELECT * from app_users where username=? AND verified=1",
                 $username) > 0;
     }
     
     function sqlIsValidated($username) {
-        return sqlCount("SELECT * from users where username=? AND varified=true", 
+        return sqlCount("SELECT * from app_users where username=? AND verified=true",
                 $username) > 0;
     }
     
     function sqlRegister($username, $hash, $email, $first_name, $last_name, $unique_code) {
-        sqlRun("INSERT into users (username, password_hash, email, first_name, last_name, varification_code) VALUES (?, ?, ?, ?, ?, ?)",
+        sqlRun("INSERT into app_users (username, password_hash, email, first_name, last_name, verification_code) VALUES (?, ?, ?, ?, ?, ?)",
                 $username, $hash, $email, $first_name, $last_name, $unique_code);
     }
     
     function sqlUpdateUser($username, $hash, $first_name, $last_name) {
-        sqlRun("UPDATE users SET password_hash=?, first_name=?, last_name=? WHERE username=?",
+        sqlRun("UPDATE app_users SET password_hash=?, first_name=?, last_name=? WHERE username=?",
                 $hash, $first_name, $last_name, $username);
     }
     
     function sqlUpdateUserNoPassword($username, $first_name, $last_name) {
-        sqlRun("UPDATE users SET first_name=?, last_name=? WHERE username=?",
+        sqlRun("UPDATE app_users SET first_name=?, last_name=? WHERE username=?",
                 $first_name, $last_name, $username);
     }
     
@@ -131,26 +131,26 @@
         }
     }
     
-    function sqlValidEmailVarification($username, $code) {
+    function sqlValidEmailVerification($username, $code) {
         return sqlCount("SELECT * from email_change where user=? AND code=?", 
                 $username, $code) > 0;
     }
     
     function sqlVarifyEmail($username) {
         $email = sqlUnique("SELECT * from email_change WHERE user=?", $username)['email'];
-        sqlRun("UPDATE users set email=? where username=?",
+        sqlRun("UPDATE app_users set email=? where username=?",
                 $email, $username);
         sqlRun("DELETE from email_change where user=?",
                 $username);
     }
     
-    function sqlValidVarification($username, $code) {
-        return sqlCount("SELECT * from users where username=? AND varification_code=?", 
+    function sqlValidVerification($username, $code) {
+        return sqlCount("SELECT * from app_users where username=? AND verification_code=?",
                 $username, $code) > 0;
     }
     
-    function sqlVarifyUser($username) {
-        sqlRun("UPDATE users set varified=true where username=?",
+    function sqlVerifyUser($username) {
+        sqlRun("UPDATE app_users set verified=true where username=?",
                 $username);
     }
     
@@ -186,18 +186,18 @@
     function sqlGetFriends($username) {
         return sqlQuery("SELECT friends.friended AS friend, " .
                         "(friends.accepted + (friends.accepted=0)*2) AS state, " .
-                        "if(accepted=0,'',users.first_name) as first_name, " .
-                        "if(accepted=0,'',users.last_name) as last_name " .
+                        "if(accepted=0,'',app_users.first_name) as first_name, " .
+                        "if(accepted=0,'',app_users.last_name) as last_name " .
                         "FROM friends " .
-                        "JOIN users on(friends.friended=users.username) " .
+                        "JOIN app_users on(friends.friended=app_users.username) " .
                         "WHERE friends.friender=? " .
                         "UNION " .
                         "SELECT friends.friender AS friend, " .
                         "(friends.accepted + (friends.accepted=0)*3) AS state, " .
-                        "users.first_name as first_name, " .
-                        "users.last_name as last_name " .
+                        "app_users.first_name as first_name, " .
+                        "app_users.last_name as last_name " .
                         "FROM friends " .
-                        "JOIN users on(friends.friender=users.username) " .
+                        "JOIN app_users on(friends.friender=app_users.username) " .
                         "WHERE friends.friended=?;",
                         $username, $username);
     }
@@ -205,18 +205,18 @@
     function sqlGetFriend($username, $friend) {
         return sqlUnique("SELECT friends.friended AS friend, " .
                         "(friends.accepted + (friends.accepted=0)*2) AS state, " .
-                        "if(accepted=0,'',users.first_name) as first_name, " .
-                        "if(accepted=0,'',users.last_name) as last_name " .
+                        "if(accepted=0,'',app_users.first_name) as first_name, " .
+                        "if(accepted=0,'',app_users.last_name) as last_name " .
                         "FROM friends " .
-                        "JOIN users on(friends.friended=users.username) " .
+                        "JOIN app_users on(friends.friended=app_users.username) " .
                         "WHERE friends.friender=? AND friends.friended=? " .
                         "UNION " .
                         "SELECT friends.friender AS friend, " .
                         "(friends.accepted + (friends.accepted=0)*3) AS state, " .
-                        "users.first_name as first_name, " .
-                        "users.last_name as last_name " .
+                        "app_users.first_name as first_name, " .
+                        "app_users.last_name as last_name " .
                         "FROM friends " .
-                        "JOIN users on(friends.friender=users.username) " .
+                        "JOIN app_users on(friends.friender=app_users.username) " .
                         "WHERE friends.friended=? AND friends.friender=?;",
                         $username, $friend, $username, $friend);
     }

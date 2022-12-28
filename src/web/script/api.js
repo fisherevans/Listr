@@ -53,7 +53,7 @@ function timeAgo(time){
         { name: "month", limit: 31556926, in_seconds: 2629743 },
         { name: "year", limit: null, in_seconds: 31556926 }
     ];
-    var diff = (new Date() - time) / 1000;
+    var diff = (new Date() - time ) / 1000 + 14400;
 
     var i = 0;
     while (unit = units[i++]) {
