@@ -1,6 +1,6 @@
 # Listr
 
-Listr was a list making web-app I made for my databases course at VTC during my sophomore year back in 2013. It was one of my very first fully functioning creations - and looking back I'm pretty impressed with my young self. You were able to:
+Listr was a list making web-app I made for my databases course at VTC during my sophomore year back in 2014. It was one of my very first fully functioning creations - and looking back I'm pretty impressed with my young self. You were able to:
 
 - Register new users (with email validation)
 - Login
